@@ -45,4 +45,24 @@ func main() {
 	}
 
 	dump(lights)
+
+	if len(lights) == 0 {
+		return
+	}
+
+	for _, light := range lights {
+		light.On = elgatoring.BoolFrom(!light.On.Value())
+	}
+
+	lights, err = c.SetLights(context.Background(), lights)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	dump(lights)
+
+	// if err := c.Identify(context.Background()); err != nil {
+	// 	log.Panic(err)
+	// }
+
 }

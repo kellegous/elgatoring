@@ -73,6 +73,10 @@ func (c *Client) request(
 		return fmt.Errorf("status code: %d", res.StatusCode)
 	}
 
+	if result == nil {
+		return nil
+	}
+
 	return json.NewDecoder(res.Body).Decode(result)
 }
 
@@ -97,4 +101,24 @@ func (c *Client) GetLights(ctx context.Context) ([]*Light, error) {
 	}
 
 	return data.Lights, nil
+}
+
+func (c *Client) SetLights(ctx context.Context, lights []*Light) ([]*Light, error) {
+	data := struct {
+		Count  int      `json:"numberOfLights"`
+		Lights []*Light `json:"lights"`
+	}{
+		Count:  len(lights),
+		Lights: lights,
+	}
+
+	if err := c.request(ctx, http.MethodPut, "/elgato/lights", &data, &data); err != nil {
+		return nil, err
+	}
+
+	return data.Lights, nil
+}
+
+func (c *Client) Identify(ctx context.Context) error {
+	return c.request(ctx, http.MethodPost, "/elgato/identify", nil, nil)
 }
