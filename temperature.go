@@ -1,5 +1,10 @@
 package elgatoring
 
+const (
+	MinTemperature Temperature = 143
+	MaxTemperature Temperature = 344
+)
+
 type Temperature int
 
 func (t Temperature) Kelvin() int {
